@@ -1,0 +1,30 @@
+<div class="sidebar-container">
+    <ng-container *ngIf="(targetMessage | async)?.id !== ''; else target">
+        <header class="sidebar-header">
+            <span class="sidebar-header-title">Send Message</span>
+        </header>
+        <button mat-stroked-button [disabled]="(targetMessage | async)?.isStartMessage" (click)="setStartMessage()">Start</button>
+        <ng-template #textblock>
+            <span class="hint" >Use buttons below to add text and pictures</span>
+        </ng-template>
+        <input class="text-block" *ngIf="(targetMessage | async)?.text?.length !== 0;else textblock" [(ngModel)]="addTextTitle" (input)="addText()">
+            
+        <div class="add-buttons">
+            <div class="add-btn" (click)="addText()">
+                <mat-icon>format_align_left</mat-icon>
+                + Text
+            </div>
+            <div class="add-btn">
+                <mat-icon>add_photo_alternate</mat-icon>
+                + Image
+            </div>
+            <div class="add-btn">
+                <mat-icon class="stop-icon">stop</mat-icon>
+                + Card
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #target>
+        <p class="hint">Select any message to manage(Double-Click)</p>
+    </ng-template>
+</div>

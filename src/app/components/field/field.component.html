@@ -1,0 +1,103 @@
+<div class="field-container">
+    <div class="container" 
+    (mousedown)="mouseDown($event)"
+    (mouseup)="mouseUp($event)"
+    (mousemove)="mouseMove($event)" 
+    [style.transform]="'translate(' + -positionX + 'px, ' + -positionY + 'px)' + 'scale('+ scrollScale +')'"
+    (wheel)="canvasOnScroll($event)"
+    >
+        <div class="message-card" 
+        *ngFor="let message of (messagesArray | async)" 
+        (mousedown)="messageMouseDown($event, message.id)" 
+        (mouseup)="messageMouseUp($event)"
+        (mousemove)="messageMouseMove($event,message.id)"
+        (dblclick)="doubleClick(message.id)"
+        [style.transform]="'translate(' + message.xPos + 'px, ' + message.yPos + 'px)'"
+        [style.z-index]="message.layer"
+        >
+            <div class="card-header">
+                <span class="send-message-title">Send Message</span>
+            </div>
+            <div class="card-content-container">
+                <div class="click-to-add">
+                    <mat-icon> chat_bubble_outline</mat-icon>
+                    <span class="click-text">Click here to add messages to the sidebar</span>
+                </div>   
+            <!-- <div class="click-to-add-text">
+                <mat-icon>format_align_left</mat-icon>
+                <span class="click-text">Click to add text in sidebar</span>
+            </div> -->
+            
+            </div>
+            <div class="item-btn-container">
+                <button class="copy-btn"><mat-icon>queue</mat-icon></button>
+                <button class="delete-btn" (click)="deleteMessage(message.id)"><mat-icon>delete_forever</mat-icon></button>
+            </div>
+            <div class="first-message-container" *ngIf="message.isStartMessage">
+                Start Message
+            </div>
+        </div>
+        <div class="randomize-container"
+        *ngFor="let randomize of (randomizersArray | async)"
+        [style.transform]="'translate(' + randomize.xPos + 'px, ' + randomize.yPos + 'px)'"
+        [style.z-index]="randomize.layer"
+        (mousedown)="randomizerMouseDown($event)" 
+        (mouseup)="randomizerMouseUp()"
+        (mousemove)="randomizerMouseMove($event,randomize.id)"
+        >
+            <div class="randomize-header">
+                <span class="send-message-title">Randomizer</span>
+            </div>
+            <div class="randomize-variants">
+                <div class="randomize-variant"><span>A</span> <span>50%</span></div>
+                <mat-divider></mat-divider>
+                <div class="randomize-variant"><span>B</span> <span>50%</span></div>
+            </div>
+            <div class="item-btn-container">
+                <button class="copy-btn"><mat-icon>queue</mat-icon></button>
+                <button class="delete-btn" (click)="deleteRandomize(randomize.id)"><mat-icon>delete_forever</mat-icon></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="add-elements-btn" (click)="addElement()">
+    <mat-icon class="add-icon">add</mat-icon>
+    <div class="add-elements-container" *ngIf="isOpenedAdd == true">
+        <div class="triangle"></div>
+        <div class="test-container">
+            Test
+        </div>
+        <div class="send-message-container" (click)="addNewMessage()">
+            <mat-icon style="color:silver; margin-right: 10px"> chat_bubble_outline</mat-icon>
+            Send Message
+        </div>
+        <div class="randomizer-container" (click)="addNewRandomize()">
+            <img src="../../../assets/images/randomizer.svg" alt="" class="randomizer-icon">
+            Randomizer
+        </div>
+    </div>
+</div> 
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav  mode="side" class="side-cont" [(opened)]="isOpenedSidenav">
+        <app-sidebar></app-sidebar>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <button mat-button (click)="sidenav.toggle()" class="sidenav-btn"> 
+            <div class="btn-round" *ngIf="isOpenedSidenav == false">
+                &#10095;
+            </div>   
+            <div class="btn-round" *ngIf="isOpenedSidenav == true">
+                &#10094;
+            </div>          
+        </button>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div class="scale-container">
+    <button class="scale-btn" (click)="scaleUp()" [disabled]="scrollScale > 1.25" [ngClass]="{scaleBtnDisabled: (scrollScale > 1.25)}" >+</button>
+    <div class="scale-anim">
+        <div class="anim-element"></div>
+    </div>
+    <button class="scale-btn" (click)="scaleDown()" [disabled]="scrollScale < 0.75" [ngClass]="{scaleBtnDisabled: (scrollScale < 0.75)}" >-</button>
+</div>
+        
